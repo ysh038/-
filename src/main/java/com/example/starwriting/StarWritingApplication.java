@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class StarWritingApplication {
-
+// wntjr
     public static void main(String[] args) {
         SpringApplication.run(StarWritingApplication.class, args);
     }
