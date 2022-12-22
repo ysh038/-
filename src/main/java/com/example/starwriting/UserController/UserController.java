@@ -4,23 +4,19 @@ import com.example.starwriting.UserDao;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 
 @RestController
 public class UserController {
     UserDao user = new UserDao();
 
-    @GetMapping("/")
-    public String get() {
-        System.out.println("localhost:8000/에 Get 요청");
-        return "user";
-    }
-
-    @GetMapping("/api")
-    public String getUser() throws SQLException, ClassNotFoundException {
-        System.out.println("/api Get User 요청 들어옴");
-        user.get();
-        return "user";
+    @GetMapping("/api/users")
+    public List getUser() throws SQLException, ClassNotFoundException {
+        System.out.println("Get User 요청 들어옴");
+        List<String> name = user.getName();
+        System.out.println(name);
+        return name;
     }
 
     @PostMapping("/api/test")

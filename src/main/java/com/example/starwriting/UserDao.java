@@ -1,11 +1,19 @@
 package com.example.starwriting;
 
+import com.fasterxml.jackson.databind.util.JSONPObject;
+import com.mysql.cj.xdevapi.JsonArray;
+import com.mysql.cj.xdevapi.JsonValue;
+import jdk.nashorn.internal.parser.JSONParser;
+import org.json.JSONObject;
+import org.json.JSONArray;
+
 import java.sql.*;
 import java.time.LocalDate;
-
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserDao {
-    public void get() throws ClassNotFoundException, SQLException {
+    public List getName() throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.cj.jdbc.Driver");
         Connection conn = DriverManager.getConnection(
                 "jdbc:mysql://localhost:3306/stardb","root","pass"
@@ -15,14 +23,31 @@ public class UserDao {
         );
 
         ResultSet rs = ps.executeQuery();
+        List<String> name = new ArrayList<>();
+
+        JSONArray jarr = new JSONArray();
 
         while(rs.next()){
-            System.out.println(rs.getString("user_id"));
+            JSONObject obj = new JSONObject();
+//          name.add(rs.getString("name"));
+            String nickname  = rs.getString("name");
+            String user_id = rs.getString("user_id");
+            String password = rs.getString("password");
+
+            obj.put("user_id",user_id);
+            obj.put("title",nickname);
+            obj.put("password",password);
+
+            jarr.put(obj);
         }
+        //String jsonSt = jarr.to();
+        System.out.println(jarr);
 
         rs.close();
         ps.close();
         conn.close();
+
+        return name;
     }
     public void add(String user_id, String password, String name,String birthday,String email,String phone_num,String nickname) throws SQLException, ClassNotFoundException {
         Class.forName("com.mysql.cj.jdbc.Driver");
