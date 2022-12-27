@@ -10,10 +10,11 @@ import org.json.JSONArray;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class UserDao {
-    public List getName() throws ClassNotFoundException, SQLException {
+    public JSONArray getName() throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.cj.jdbc.Driver");
         Connection conn = DriverManager.getConnection(
                 "jdbc:mysql://localhost:3306/stardb","root","pass"
@@ -23,31 +24,39 @@ public class UserDao {
         );
 
         ResultSet rs = ps.executeQuery();
-        List<String> name = new ArrayList<>();
-
         JSONArray jarr = new JSONArray();
 
         while(rs.next()){
             JSONObject obj = new JSONObject();
-//          name.add(rs.getString("name"));
-            String nickname  = rs.getString("name");
             String user_id = rs.getString("user_id");
+            String name  = rs.getString("name");
             String password = rs.getString("password");
+            Date birthday = rs.getDate("birthday");
+            String email = rs.getString("email");
+            String phone_num = rs.getString("phone_num");
+            String nickname = rs.getString("nickname");
+            String tier = rs.getString("tier");
+            Date since_from = rs.getDate("since_from");
+            String id = rs.getString("id");
 
             obj.put("user_id",user_id);
-            obj.put("title",nickname);
+            obj.put("name",name);
             obj.put("password",password);
+            obj.put("birthday",birthday);
+            obj.put("email",email);
+            obj.put("phone_num",phone_num);
+            obj.put("nickname",nickname);
+            obj.put("tier",tier);
+            obj.put("since_from",since_from);
+            obj.put("id",id);
 
             jarr.put(obj);
         }
-        //String jsonSt = jarr.to();
-        System.out.println(jarr);
-
         rs.close();
         ps.close();
         conn.close();
 
-        return name;
+        return jarr;
     }
     public void add(String user_id, String password, String name,String birthday,String email,String phone_num,String nickname) throws SQLException, ClassNotFoundException {
         Class.forName("com.mysql.cj.jdbc.Driver");
@@ -75,5 +84,17 @@ public class UserDao {
         int status = ps.executeUpdate();
         ps.close();
         conn.close();
+    }
+
+    public void delete() throws ClassNotFoundException, SQLException {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        Connection conn = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/stardb","root","pass"
+        );
+        PreparedStatement ps = conn.prepareStatement(
+                "DELETE FROM user_tb"
+        );
+
+        ps.execute();
     }
 }
